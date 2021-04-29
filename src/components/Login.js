@@ -1,14 +1,60 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux';
-import { userLogin } from '../store/actions';
+import { useHistory } from 'react-router-dom';
+import { userLoginSuccess, userLoginFailure, userLoginStart } from '../store/actions';
+import { axiosWithAuth } from '../utils/axiosWithAuth';
+import styled from 'styled-components';
+
+const StyledLogin = styled.div`
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 2% 0;
+
+
+  button{
+    background-color: #ddd;
+    color: #333;
+    font-family: sans-serif;
+    font-size: .8rem;
+    padding: 1% 2%;
+    border-radius: 10px;
+    font-weight: bold;
+    margin: 2%;
+
+        &:hover {
+        background-color: rgba(104, 104, 104, 0.8);
+        color: white;
+        transition: all 1s ease-in-out;
+        }
+ 
+  }
+`
+
 
 const LoginForm = (props) => {
+
+    const { push } = useHistory();
     const [details, setDetails] = useState({username: "", password: ""});
-    const { isCallingAPI, error } = props;
+    const { userLoginSuccess, userLoginFailure, isCallingAPI, error } = props;
 
     const submitHandler = evt => {
         evt.preventDefault();
-        userLogin("https://water-my-plants-tt67.herokuapp.com/users/login", details);
+        userLoginStart();
+        axiosWithAuth()
+          .post("/users/login", details)
+          .then( res => {
+            localStorage.setItem('token', JSON.stringify(res.data.access_token));
+            userLoginSuccess(res.data.user);
+            push(`/user/${res.data.user.user_id}/plants`);
+          })
+          .catch( err => {
+            console.log(err);
+            userLoginFailure(err);
+          })
+        
     }
 
     return (
@@ -16,8 +62,8 @@ const LoginForm = (props) => {
         { (isCallingAPI) ? (<h2>Please wait, checking credentials</h2>): 
             (
             <form onSubmit={submitHandler}>
-                <div className= "form-inner">
-                    <h2>Login</h2>
+                <StyledLogin>
+                   
                     {(error !== "") ? (<div className= "error">{error}</div>) : ""}
                     <div className= "form-group">
                         <label>Username: </label>
@@ -39,10 +85,8 @@ const LoginForm = (props) => {
                                 setDetails({...details, password: evt.target.value})} 
                                 value= {details.password}/>
                     </div>
-                    <input
-                        type="submit"
-                        value= "Submit"/>
-                </div>
+                    <button id="submit" type="submit">Login</button>
+                </StyledLogin>
             </form>
             )}
       </div>
@@ -56,4 +100,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { userLogin })(LoginForm);
+export default connect(mapStateToProps, { userLoginSuccess, userLoginFailure, userLoginStart })(LoginForm);

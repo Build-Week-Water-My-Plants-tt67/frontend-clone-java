@@ -3,7 +3,8 @@ import { USER_LOGIN_START, USER_LOGIN_SUCCESS, USER_LOGIN_FAILURE, EDIT_USER_STA
 const initialState = {
   user: {},
   error: '',
-  isCallingAPI: false
+  isCallingAPI: false,
+  isLoggedIn: false
 };
 
 export const user = (state=initialState, action) => {
@@ -15,10 +16,12 @@ export const user = (state=initialState, action) => {
           isCallingAPI: true
         };
       case USER_LOGIN_SUCCESS:
+        console.log(action.payload);
         return {
           ...state,
           user: action.payload,
-          isCallingAPI: false
+          isCallingAPI: false,
+          isLoggedIn: true
         };
       case USER_LOGIN_FAILURE:
         return {
@@ -47,7 +50,8 @@ export const user = (state=initialState, action) => {
     case USER_LOGOUT:
       return {
         ...state,
-        state: initialState
+        state: initialState,
+        isLoggedIn: false
       };
     default:
       return state;

@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import schema from '../formSchema'
+import schema from './schema/formSchema2';
 import * as yup from 'yup';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { addPlant } from '../store/actions';
 
 
@@ -16,14 +17,15 @@ const initialFormErrors = {
   nickname: "",
   species: "",
   h20Frequency: "",
-  image: "",
+  
 };
 
 const initialDisabled = true;
 
 const CreatePlant = (props) => {
 
-  const { user_id, addPlant } = props;
+  const { error, user_id, addPlant } = props;
+  const push = useHistory();
   const [formValues, setFormValues] = useState(initialFormValues); 
   const [formErrors, setFormErrors] = useState(initialFormErrors); 
   const [disabled, setDisabled] = useState(initialDisabled); 
@@ -56,9 +58,12 @@ const CreatePlant = (props) => {
       nickname: formValues.nickname.trim(),
       species: formValues.species.trim(),
       h20Frequency: formValues.h20Frequency.trim(),
-      image: formValues.image
+      image: formValues.image.trim(),
     };
-    addPlant(`https://water-my-plants-tt67.herokuapp.com/api/plants/${user_id}`, newPlant);
+    addPlant(`/plants/${user_id}`, newPlant);
+    if ( error === '') {
+      push(`/user/${user_id}/plants`);
+    }
   };
     
   useEffect(() => {
@@ -128,8 +133,15 @@ const CreatePlant = (props) => {
         </label>
         <div>
         <label htmlFor="image"><h4>Select Image: </h4>
-        <input type="file" id="image" name="image" value={formValues.image} accept="image/*" />
-        </label>
+          <input
+              type="text"
+              value={formValues.image}
+              onChange={onChange}
+              name="image"
+              id="image-input"
+              placeholder="Image Location"
+            />
+          </label>
         </div>
         <div id="submit">
           <button id="submit" disabled={disabled}>Create A Plant</button>

@@ -9,14 +9,17 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import reducer from './store/reducers';
 
+
 const store = createStore(reducer, applyMiddleware(thunk));
 
 ReactDOM.render(
+  
   <Provider store={store}>
     <Router>
       <App />
     </Router>
-  </Provider>,
+  </Provider>
+  ,
   document.getElementById('root')
 );
 
