@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import * as yup from 'yup';
-import schema from './formSchema';
+import schema from './schema/formSchema';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
+
+const StyledSignUp = styled.div`
+  padding: 2% 2%;
+
+  label{
+    margin-bottom: 2%;
+  }
+  `
 
 const initialFormValues = {
   username: "",
@@ -93,7 +102,7 @@ export default function Form() {
 
   return (
     <>
-      <div>
+      <StyledSignUp>
           <div>
 
           <form onSubmit={onSubmit} id="signup-form">
@@ -105,7 +114,8 @@ export default function Form() {
                 </em>
               </div>
               <div>
-              <label><h4>Username: </h4>
+                <h1>Sign Up With Us Today!</h1>
+              <label>Username:
                 <input
                   type="text"
                   value={formValues.username}
@@ -116,8 +126,9 @@ export default function Form() {
                   maxLength="30"
                 />
               </label>
-
-              <label><h4>Phone Number: </h4>
+                <br/>
+                <br/>
+              <label>Phone Number:
                 <input
                   type="text"
                   value={formValues.phoneNumber}
@@ -128,8 +139,9 @@ export default function Form() {
                   maxLength="30"
                 />
               </label>
-
-              <label><h4>Password: </h4>
+              <br/>
+              <br/>
+              <label>Password: 
                 <input
                   type="password"
                   value={formValues.password}
@@ -140,13 +152,14 @@ export default function Form() {
                   maxLength="30"
                 />
               </label>
+              <br/>
               <div id="submit">
                 <button id="submit" disabled={disabled}>Sign Up</button>
               </div>
           </div>
           </form>
         </div>
-    </div>
+    </StyledSignUp>
   </>
   )
 }

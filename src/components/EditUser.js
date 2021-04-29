@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as yup from 'yup';
-import schema from './formSchema';
+import schema from './schema/editUserSchema';
 import { editUser } from '../store/actions';
 import { connect } from 'react-redux';
 
@@ -49,6 +49,7 @@ const EditUser = (props) => {
 
   useEffect(() => {
     schema.isValid(values).then((valid) => {
+      console.log(valid);
       setDisabled(!valid);
     });
   }, [values]);
@@ -60,7 +61,7 @@ const EditUser = (props) => {
 
   const onSubmit = evt => {
     evt.preventDefault();
-    editUser(`https://water-my-plants-tt67.herokuapp.com/users/${user.user_id}`, values);
+    editUser(`/users/${user.user_id}`, values);
   }
 
   return (
