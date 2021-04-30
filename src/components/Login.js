@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { userLoginSuccess, userLoginFailure, userLoginStart } from '../store/actions';
-import { axiosWithAuth } from '../utils/axiosWithAuth';
+import axios from "axios";
 import styled from 'styled-components';
 
 const StyledLogin = styled.div`
@@ -41,11 +41,11 @@ const LoginForm = (props) => {
     const { userLoginSuccess, userLoginFailure, isCallingAPI, error } = props;
 
     const submitHandler = evt => {
-      e.preventDefault();
+      evt.preventDefault();
       axios
         .post(
           "https://bw-tt-67-water-my-plants.herokuapp.com/api/login",
-          `grant_type=password&username=${credentials.username}&password=${credentials.password}`,
+          `grant_type=password&username=${details.username}&password=${details.password}`,
           {
             headers: {
               // btoa is converting our client id/client secret into base64
