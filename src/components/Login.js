@@ -41,19 +41,24 @@ const LoginForm = (props) => {
     const { userLoginSuccess, userLoginFailure, isCallingAPI, error } = props;
 
     const submitHandler = evt => {
-        evt.preventDefault();
-        userLoginStart();
-        axiosWithAuth()
-          .post("/users/login", details)
-          .then( res => {
-            localStorage.setItem('token', JSON.stringify(res.data.access_token));
-            userLoginSuccess(res.data.user);
-            push(`/user/${res.data.user.user_id}/plants`);
-          })
-          .catch( err => {
-            console.log(err);
-            userLoginFailure(err);
-          })
+      e.preventDefault();
+      axios
+        .post(
+          "https://bw-tt-67-water-my-plants.herokuapp.com/api/login",
+          `grant_type=password&username=${credentials.username}&password=${credentials.password}`,
+          {
+            headers: {
+              // btoa is converting our client id/client secret into base64
+              Authorization: `Basic ${btoa("lambda-client:lambda-secret")}`,
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          },
+        )
+        .then((res) => {
+          console.log(res.data);
+          localStorage.setItem("token", res.data.access_token);
+          props.history.push("/");
+        });
         
     }
 

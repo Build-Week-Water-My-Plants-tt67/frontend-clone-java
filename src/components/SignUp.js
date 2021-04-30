@@ -40,7 +40,7 @@ export default function Form() {
 
   const postNewSignUp = (newSignUp) => {
     axios
-      .post("https://reqres.in/api/orders", newSignUp)
+      .post("https://bw-tt-67-water-my-plants.herokuapp.com/api/register", newSignUp)
       .then((res) => {
         setSignUp([res.data, ...signUp]);
         setFormValues(initialFormValues);
